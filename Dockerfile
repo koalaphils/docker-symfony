@@ -58,6 +58,7 @@ RUN apt-get update; \
     intl \
     json \
     opcache \
+    pdo_mysql \
     readline \
     session \
     simplexml \
