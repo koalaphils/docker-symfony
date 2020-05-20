@@ -81,7 +81,7 @@ RUN apt-get update; \
   apt-mark auto '.*' > /dev/null; \
   [ -z "$savedAptMark" ] || apt-mark manual $savedAptMark; \
   apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImport=false; \
-  rm -rf /tmp/* ~/.pearrc /var/lib/apt/lists/*; /var/cache/* \
+  rm -rf /tmp/* ~/.pearrc /var/lib/apt/lists/* /var/cache/*; \
   php --version; \
   a2enmod \
     brotli \
@@ -103,5 +103,6 @@ RUN git config --global user.email "admin@koalaphils.com"; \
 
 WORKDIR /var/www/html
 ONBUILD COPY app /var/www/html
+ONBUILD RUN sed -i "s|/var/www/html|/var/www/html/public|g" /etc/apache2/sites-enabled/000-default.conf
 
 ONBUILD RUN composer install --prefer-dist --no-suggest --no-interaction -ao --apcu-autoloader
