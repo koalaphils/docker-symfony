@@ -5,27 +5,22 @@ LABEL description="Symfony base image" \
 
 RUN apt-get update \
   && apt-get install --no-install-recommends -y \
+    curl \
     git \
     imagemagick \
-    netcat \
-    libfreetype6 \
+    libeditline0 \
     libjpeg62-turbo \
     libpng16-16 \
-    libxml2 \
-    libxpm4 \
     libzip4 \
-    tzdata \
     unzip \
-  ;
-RUN apt-get update; \
-  apt-mark manual '.*' > /dev/null;\
+  ; \
+  apt-mark manual '.*' > /dev/null; \
   savedAptMark="$(apt-mark showmanual)"; \
   apt-get install -y --no-install-recommends \
     $PHPIZE_DEPS \
-    gettext \
+    gettext-base \
     libmagickwand-dev \
-    libevent-dev \
-    libfreetype6-dev \
+    libcurl4-openssl-dev \
     libicu-dev \
     libjpeg-dev \
     libjpeg62-turbo-dev \
@@ -33,26 +28,15 @@ RUN apt-get update; \
     libssl-dev \
     libwebp-dev \
     libxml2-dev \
-    libxpm-dev \
     libzip-dev \
     libbz2-dev \
     ${PHP_EXTRA_BUILD_DEPS:-} \
     ; \
   export CFLAGS="$PHP_CFLAGS" CPPFLAGS="$PHP_CPPFLAGS" LDFLAGS="$PHP_LDFLAGS" \
     ; \
-  docker-php-ext-configure zip \
-    --with-libzip=/usr/include \
-    ; \
-  docker-php-ext-configure gd \
-    --with-gd \
-    --with-freetype-dir=/usr/include/ \
-    --with-jpeg-dir=/usr/include/ \
-    --with-webp-dir=/usr/include/ \
-    --with-xpm-dir=/usr/include/ \
-    --with-png-dir=/usr/include/ \
-  ; \
   docker-php-ext-install -j$(nproc) \
     bz2 \
+    curl \
     gd \
     gettext \
     intl \
@@ -94,15 +78,15 @@ RUN apt-get update; \
     rewrite \
   ;
 
-RUN curl -sS https://get.symfony.com/cli/installer | bash
-RUN mv /root/.symfony/bin/symfony /usr/local/bin/symfony
 COPY --from=composer /usr/bin/composer /usr/local/bin/composer
 RUN git config --global user.email "admin@koalaphils.com"; \
   git config --global user.name "Koala Technologies"; \
-  echo "date.timezone=Asia/Manila" > /usr/local/etc/php/conf.d/date.ini
+  sed -i "s|/var/www/html|/var/www/html/public|g" /etc/apache2/sites-enabled/000-default.conf
 
 WORKDIR /var/www/html
-ONBUILD COPY app /var/www/html
-ONBUILD RUN sed -i "s|/var/www/html|/var/www/html/public|g" /etc/apache2/sites-enabled/000-default.conf
 
+RUN curl -sS https://get.symfony.com/cli/installer | bash
+RUN mv /root/.symfony/bin/symfony /usr/local/bin/symfony
+
+ONBUILD COPY app /var/www/html
 ONBUILD RUN composer install --prefer-dist --no-suggest --no-interaction -ao --apcu-autoloader
