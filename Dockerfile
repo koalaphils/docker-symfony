@@ -79,9 +79,7 @@ RUN apt-get update \
   ;
 
 COPY --from=composer /usr/bin/composer /usr/local/bin/composer
-RUN git config --global user.email "admin@koalaphils.com"; \
-  git config --global user.name "Koala Technologies"; \
-  sed -i "s|/var/www/html|/var/www/html/public|g" /etc/apache2/sites-enabled/000-default.conf
+RUN sed -i "s|/var/www/html|/var/www/html/public|g" /etc/apache2/sites-enabled/000-default.conf
 
 WORKDIR /var/www/html
 
@@ -89,4 +87,8 @@ RUN curl -sS https://get.symfony.com/cli/installer | bash
 RUN mv /root/.symfony/bin/symfony /usr/local/bin/symfony
 
 ONBUILD COPY app /var/www/html
-ONBUILD RUN composer install --prefer-dist --no-suggest --no-interaction -ao --apcu-autoloader
+ONBUILD RUN composer config --global use-github-api false; \
+  composer config --global vendor-dir /var/www/vendor; \ 
+  ln -s /var/www/vendor /var/www/html/vendor; \
+  composer install --prefer-dist --no-suggest --no-interaction -ao --apcu-autoloader \
+  ;
