@@ -3,14 +3,17 @@ LABEL description="Symfony base image" \
     version="1.0" \
     "com.koalaphils.vendor"="Koala Technologies"
 
-RUN apt-get update \
+RUN set -eux; \
+  apt-get update \
   && apt-get install --no-install-recommends -y \
     curl \
     git \
     imagemagick \
-    libeditline0 \
+    libcmph0 \
+    libedit2 \
     libjpeg62-turbo \
     libpng16-16 \
+    libsodium23 \
     libzip4 \
     unzip \
   ; \
@@ -19,47 +22,56 @@ RUN apt-get update \
   apt-get install -y --no-install-recommends \
     $PHPIZE_DEPS \
     gettext-base \
-    libmagickwand-dev \
+    libcmph-dev \
     libcurl4-openssl-dev \
+    libedit-dev \
     libicu-dev \
     libjpeg-dev \
     libjpeg62-turbo-dev \
+    libmagickwand-dev \
     libpng-dev \
+    libsodium-dev \
     libssl-dev \
     libwebp-dev \
     libxml2-dev \
     libzip-dev \
     libbz2-dev \
+    zlib1g-dev \
     ${PHP_EXTRA_BUILD_DEPS:-} \
     ; \
   export CFLAGS="$PHP_CFLAGS" CPPFLAGS="$PHP_CPPFLAGS" LDFLAGS="$PHP_LDFLAGS" \
     ; \
+  pecl install apcu \
+    && pecl install igbinary \
+    && pecl install imagick \
+    ; \
+  pecl install --onlyreqdeps --nobuild redis; \
+    cd "$(pecl config-get temp_dir)/redis"; \
+    phpize; \
+    ./configure --enable-redis-igbinary; \
+    make && make install; \
+    cd -; \
   docker-php-ext-install -j$(nproc) \
     bz2 \
     curl \
+    fileinfo \
     gd \
     gettext \
     intl \
     json \
     opcache \
     pdo_mysql \
-    readline \
     session \
     simplexml \
     sodium \
     zip \
     ; \
-  pecl install \
-    apcu \
-    igbinary \
-    imagick \
-    ; \
   docker-php-ext-enable \
     apcu \
     igbinary \
     imagick \
-    intl \
     opcache \
+    redis \
     ; \
   cp /usr/bin/envsubst /usr/local/bin/envsubst; \
   apt-mark auto '.*' > /dev/null; \
