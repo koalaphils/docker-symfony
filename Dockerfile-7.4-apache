@@ -1,15 +1,21 @@
 FROM koalaphils/php:7.4-apache
 
-RUN sed -i "s|/var/www/html|/var/www/html/public|g" /etc/apache2/sites-enabled/000-default.conf
+#Install symfony cli
 RUN curl -sS https://get.symfony.com/cli/installer | bash
 RUN mv /root/.symfony/bin/symfony /usr/local/bin/symfony
 
+#Apache changes for document root
+RUN sed -i "s|/var/www/html|/var/www/html/public|g" /etc/apache2/sites-enabled/000-default.conf
+
+#Copy codes to html folder
 ONBUILD COPY app /var/www/html
-ONBUILD RUN composer config --global use-github-api false; \
-  composer config --global vendor-dir /var/www/vendor; \ 
-  ln -s /var/www/vendor /var/www/html/vendor; \
-  composer install --prefer-dist --no-suggest --no-interaction -ao --apcu-autoloader --no-scripts \
+#Install composer packages
+ONBUILD RUN composer config --global use-github-api false \
+  ; composer config --global vendor-dir /var/www/vendor \ 
+  ; composer install --prefer-dist --no-suggest --no-interaction -ao --apcu-autoloader --no-scripts \
   ;
-ONBUILD RUN sed -i "s|exec \"\$@\"||g" /usr/local/bin/docker-php-entrypoint \
-  ; echo "rm -rf /var/www/html/vendor;\nln -sf /var/www/vendor /var/www/html/vendor;\ncomposer install -ao --apcu-autoloader --no-interaction;\nexec \"\$@\";" >> /usr/local/bin/docker-php-entrypoint \
+
+#Modify entrypoint to use the packages from composer custom vendor directory
+RUN sed -i "s|exec \"\$@\"||g" /usr/local/bin/docker-php-entrypoint \
+  ; echo "ln -sfF /var/www/vendor /var/www/html/vendor;\ncomposer install -ao --apcu-autoloader --no-interaction;\nexec \"\$@\";" >> /usr/local/bin/docker-php-entrypoint \
   ;
