@@ -10,3 +10,6 @@ ONBUILD RUN composer config --global use-github-api false; \
   ln -s /var/www/vendor /var/www/html/vendor; \
   composer install --prefer-dist --no-suggest --no-interaction -ao --apcu-autoloader \
   ;
+ONBUILD RUN sed -i "s|exec \"\$@\"||g" /usr/local/bin/docker-php-entrypoint; \
+  echo "ln -sFf /var/www/vendor /var/www/html/vendor;\ncomposer install -ao --apcu-autoloader --no-interaction;\nexec \"\$@\";" >> /usr/local/bin/docker-php-entrypoint \
+  ;
