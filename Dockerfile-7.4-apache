@@ -17,5 +17,5 @@ ONBUILD RUN composer config --global use-github-api false \
 
 #Modify entrypoint to use the packages from composer custom vendor directory
 RUN sed -i "s|exec \"\$@\"||g" /usr/local/bin/docker-php-entrypoint \
-  ; echo "ln -sfF /var/www/vendor /var/www/html/vendor;\ncomposer install -ao --apcu-autoloader --no-interaction;\nexec \"\$@\";" >> /usr/local/bin/docker-php-entrypoint \
+  ; echo "rm -rf /var/www/html/vendor;\nln -sfF /var/www/vendor /var/www/html/vendor;\ncomposer install -ao --apcu-autoloader --no-interaction;\nexec \"\$@\";" >> /usr/local/bin/docker-php-entrypoint \
   ;
