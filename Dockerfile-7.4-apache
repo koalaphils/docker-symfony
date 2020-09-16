@@ -4,8 +4,10 @@ FROM koalaphils/php:7.4-apache
 RUN curl -sS https://get.symfony.com/cli/installer | bash
 RUN mv /root/.symfony/bin/symfony /usr/local/bin/symfony
 
+ENV APACHE_DOCUMENT_ROOT /var/www/html/public
+
 #Apache changes for document root
-RUN sed -i "s|/var/www/html|/var/www/html/public|g" /etc/apache2/sites-enabled/000-default.conf
+RUN sed -ri -e "s|/var/www/html|${APACHE_DOCUMENT_ROOT}|g" /etc/apache2/sites-available/*.conf
 
 #Copy codes to html folder
 ONBUILD COPY app /var/www/html
