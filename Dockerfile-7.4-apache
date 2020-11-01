@@ -14,7 +14,7 @@ ONBUILD COPY app /var/www/html
 #Install composer packages
 ONBUILD RUN composer config --global use-github-api false \
   ; composer config --global vendor-dir /var/www/vendor \ 
-  ; php -d memory_limit=-1 composer install --no-interaction -ao --apcu-autoloader --no-scripts --no-progress --no-autoloader \
+  ; composer install --no-interaction -ao --apcu-autoloader --no-scripts --no-progress --no-autoloader \
   ;
 
 #Modify entrypoint to use the packages from composer custom vendor directory
