@@ -13,11 +13,11 @@ RUN sed -ri -e "s|/var/www/html|${APACHE_DOCUMENT_ROOT}|g" /etc/apache2/sites-av
 ONBUILD COPY app /var/www/html
 #Install composer packages
 ONBUILD RUN composer config --global use-github-api false \
-  ; composer config --global vendor-dir /var/www/vendor \ 
-  ; php -d memory_limit=-1 `which composer` install -no --apcu-autoloader --no-scripts --no-progress --no-autoloader \
+  ; composer config --global vendor-dir /opt/composer/vendor \ 
+  ; php -d memory_limit=-1 `which composer` install -no --apcu-autoloader --no-scripts --no-progress --no-autoloader --no-cache \
   ;
 
 #Modify entrypoint to use the packages from composer custom vendor directory
 RUN sed -i "s|exec \"\$@\"||g" /usr/local/bin/docker-php-entrypoint \
-  ; echo "rm -rf /var/www/html/vendor;\nln -sfF /var/www/vendor /var/www/html/vendor;\ncomposer dumpautoload -no --apcu --no-interaction;\ncomposer run post-install-cmd;\nexec \"\$@\";" >> /usr/local/bin/docker-php-entrypoint \
+  ; echo "if [ -d /var/www/html/vendor ]; then rm -rf /var/www/html/vendor; fi;\nln -sfF /opt/composer/vendor /var/www/html/vendor;\ncomposer dumpautoload -no --apcu --no-interaction;\ncomposer run post-install-cmd;\nexec \"\$@\";" >> /usr/local/bin/docker-php-entrypoint \
   ;
