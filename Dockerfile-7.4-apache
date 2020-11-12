@@ -13,10 +13,8 @@ RUN sed -ri -e "s|/var/www/html|${APACHE_DOCUMENT_ROOT}|g" /etc/apache2/sites-av
 ONBUILD COPY app /var/www/html
 #Install composer packages
 ONBUILD RUN composer config --global use-github-api false \
-  ; composer config --global vendor-dir /opt/composer/vendor \ 
-  ; php -d memory_limit=-1 `which composer` install -no --apcu-autoloader --no-scripts --no-progress --no-autoloader --no-cache \
+  ; rm -rf vendor && mkdir -p vendor && php -d memory_limit=-1 `which composer` install -no --apcu-autoloader --no-scripts --no-progress --no-autoloader --no-cache \
   ;
-ONBUILD RUN if [ -d /var/www/html/vendor ]; then rm -rf /var/www/html/vendor; fi; \
-  ln -sfF /opt/composer/vendor /var/www/html/vendor; \
-  composer dumpautoload -no --apcu --no-interaction \
+ONBUILD RUN composer dumpautoload -no --apcu --no-interaction --no-scripts \
   ;
+ONBUILD VOLUME /var/www/html/vendor
