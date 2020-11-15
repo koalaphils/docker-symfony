@@ -15,6 +15,6 @@ ONBUILD COPY app /var/www/html
 ONBUILD RUN composer config --global use-github-api false \
   ; rm -rf vendor && mkdir -p vendor && php -d memory_limit=-1 `which composer` install -no --apcu-autoloader --no-scripts --no-progress --no-autoloader --no-cache \
   ;
-ONBUILD RUN composer dumpautoload -no --apcu --no-interaction --no-scripts \
+ONBUILD RUN composer dumpautoload -no --apcu --no-scripts \
   ;
 ONBUILD VOLUME /var/www/html/vendor
