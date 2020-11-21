@@ -1,0 +1,15 @@
+FROM koalaphils/php:7.4-fpm
+
+#Install symfony cli
+RUN curl -sS https://get.symfony.com/cli/installer | bash
+RUN mv /root/.symfony/bin/symfony /usr/local/bin/symfony
+
+#Copy codes to html folder
+ONBUILD COPY app /var/www/html
+#Install composer packages
+ONBUILD RUN composer config --global use-github-api false \
+  ; rm -rf vendor && mkdir -p vendor && php -d memory_limit=-1 `which composer` install -no --apcu-autoloader --no-scripts --no-progress --no-autoloader --no-cache \
+  ;
+ONBUILD RUN composer dumpautoload -no --apcu --no-scripts \
+  ;
+ONBUILD VOLUME /var/www/html/vendor
