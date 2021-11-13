@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: CI to Docker Hub
+name: Build and Push to Registry
 
 # Controls when the action will run.
 on:
@@ -17,7 +17,8 @@ jobs:
   php-8:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
-
+    permissions:
+      packages: write
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -28,19 +29,18 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
+      - name: Login to GHCR
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
         with:
           platforms: all
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
-      - name: Cache Docker Layers
-        uses: actions/cache@v2
-        with:
-          path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-buildx-
       - name: PHP 8 FPM
         uses: docker/build-push-action@v2
         with:
@@ -48,10 +48,12 @@ jobs:
           file: ./Dockerfile-8-fpm
           builder: ${{ steps.buildx.outputs.name }}
           platforms: linux/amd64,linux/arm64/v8
-          cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,dest=/tmp/.buildx-cache
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
           push: true
-          tags: ${{ secrets.DOCKERHUB_ACCOUNT }}/symfony:8-fpm
+          tags: |
+          ${{ secrets.DOCKERHUB_ACCOUNT }}/symfony:8-fpm
+          ghcr.io/${{ secrets.DOCKERHUB_ACCOUNT }}/symfony:8-fpm
       - name: PHP 8 Apache
         uses: docker/build-push-action@v2
         with:
@@ -59,14 +61,17 @@ jobs:
           file: ./Dockerfile-8-apache
           builder: ${{ steps.buildx.outputs.name }}
           platforms: linux/amd64,linux/arm64/v8
-          cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,dest=/tmp/.buildx-cache
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
           push: true
-          tags: ${{ secrets.DOCKERHUB_ACCOUNT }}/symfony:8-apache
+          tags: |
+          ${{ secrets.DOCKERHUB_ACCOUNT }}/symfony:8-apache
+          ghcr.io/${{ secrets.DOCKERHUB_ACCOUNT }}/symfony:8-apache
   php-74:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
-
+    permissions:
+      packages: write
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -77,19 +82,18 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
+      - name: Login to GHCR
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
         with:
           platforms: all
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
-      - name: Cache Docker Layers
-        uses: actions/cache@v2
-        with:
-          path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-buildx-
       - name: PHP 7.4 FPM
         uses: docker/build-push-action@v2
         with:
@@ -97,10 +101,12 @@ jobs:
           file: ./Dockerfile-7.4-fpm
           builder: ${{ steps.buildx.outputs.name }}
           platforms: linux/amd64,linux/arm64/v8
-          cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,dest=/tmp/.buildx-cache
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
           push: true
-          tags: ${{ secrets.DOCKERHUB_ACCOUNT }}/symfony:7.4-fpm
+          tags: |
+          ${{ secrets.DOCKERHUB_ACCOUNT }}/symfony:7.4-fpm
+          ghcr.io/${{ secrets.DOCKERHUB_ACCOUNT }}/symfony:7.4-fpm
       - name: PHP 7.4 Apache
         uses: docker/build-push-action@v2
         with:
@@ -108,7 +114,9 @@ jobs:
           file: ./Dockerfile-7.4-apache
           builder: ${{ steps.buildx.outputs.name }}
           platforms: linux/amd64,linux/arm64/v8
-          cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,dest=/tmp/.buildx-cache
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
           push: true
-          tags: ${{ secrets.DOCKERHUB_ACCOUNT }}/symfony:7.4-apache
+          tags: |
+          ${{ secrets.DOCKERHUB_ACCOUNT }}/symfony:7.4-apache
+          ghcr.io/${{ secrets.DOCKERHUB_ACCOUNT }}/symfony:7.4-apache
