@@ -52,7 +52,7 @@ jobs:
           cache-to: type=gha,mode=max
           push: true
           tags: |
-            ${{ secrets.DOCKERHUB_ACCOUNT }}/symfony:8-fpm
+            ${{ github.repository_owner }}/symfony:8-fpm
             ghcr.io/${{ github.repository_owner }}/symfony:8-fpm
       - name: PHP 8 Apache
         uses: docker/build-push-action@v2
@@ -65,7 +65,7 @@ jobs:
           cache-to: type=gha,mode=max
           push: true
           tags: |
-            ${{ secrets.DOCKERHUB_ACCOUNT }}/symfony:8-apache
+            ${{ github.repository_owner }}/symfony:8-apache
             ghcr.io/${{ github.repository_owner }}/symfony:8-apache
   php-74:
     # The type of runner that the job will run on
@@ -105,7 +105,7 @@ jobs:
           cache-to: type=gha,mode=max
           push: true
           tags: |
-            ${{ secrets.DOCKERHUB_ACCOUNT }}/symfony:7.4-fpm
+            ${{ github.repository_owner }}/symfony:7.4-fpm
             ghcr.io/${{ github.repository_owner }}/symfony:7.4-fpm
       - name: PHP 7.4 Apache
         uses: docker/build-push-action@v2
@@ -118,5 +118,5 @@ jobs:
           cache-to: type=gha,mode=max
           push: true
           tags: |
-            ${{ secrets.DOCKERHUB_ACCOUNT }}/symfony:7.4-apache
+            ${{ github.repository_owner }}/symfony:7.4-apache
             ghcr.io/${{ github.repository_owner }}/symfony:7.4-apache
