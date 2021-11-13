@@ -48,8 +48,8 @@ jobs:
           file: ./Dockerfile-8-fpm
           builder: ${{ steps.buildx.outputs.name }}
           platforms: linux/amd64,linux/arm64/v8
-          cache-from: type=registry,ref=${{ github.repository_owner }}/symfony:8-fpm-buildcache
-          cache-to: type=registry,mode=max,ref=${{ github.repository_owner }}/symfony:8-fpm-buildcache
+          cache-from: type=registry,ref=ghcr.io/${{ github.repository_owner }}/symfony:8-fpm-buildcache
+          cache-to: type=registry,mode=max,ref=ghcr.io/${{ github.repository_owner }}/symfony:8-fpm-buildcache
           push: true
           tags: |
             ${{ github.repository_owner }}/symfony:8-fpm
@@ -61,8 +61,8 @@ jobs:
           file: ./Dockerfile-8-apache
           builder: ${{ steps.buildx.outputs.name }}
           platforms: linux/amd64,linux/arm64/v8
-          cache-from: type=registry,ref=${{ github.repository_owner }}/symfony:8-apache-buildcache
-          cache-to: type=registry,mode=max,ref=${{ github.repository_owner }}/symfony:8-apache-buildcache
+          cache-from: type=registry,ref=ghcr.io/${{ github.repository_owner }}/symfony:8-apache-buildcache
+          cache-to: type=registry,mode=max,ref=ghcr.io/${{ github.repository_owner }}/symfony:8-apache-buildcache
           push: true
           tags: |
             ${{ github.repository_owner }}/symfony:8-apache
@@ -101,8 +101,8 @@ jobs:
           file: ./Dockerfile-7.4-fpm
           builder: ${{ steps.buildx.outputs.name }}
           platforms: linux/amd64,linux/arm64/v8
-          cache-from: type=registry,ref=${{ github.repository_owner }}/symfony:7.4-fpm-buildcache
-          cache-to: type=registry,mode=max,ref=${{ github.repository_owner }}/symfony:7.4-fpm-buildcache
+          cache-from: type=registry,ref=ghcr.io/${{ github.repository_owner }}/symfony:7.4-fpm-buildcache
+          cache-to: type=registry,mode=max,ref=ghcr.io/${{ github.repository_owner }}/symfony:7.4-fpm-buildcache
           push: true
           tags: |
             ${{ github.repository_owner }}/symfony:7.4-fpm
@@ -114,8 +114,8 @@ jobs:
           file: ./Dockerfile-7.4-apache
           builder: ${{ steps.buildx.outputs.name }}
           platforms: linux/amd64,linux/arm64/v8
-          cache-from: type=registry,ref=${{ github.repository_owner }}/symfony:7.4-apache-buildcache
-          cache-to: type=registry,mode=max,ref=${{ github.repository_owner }}/symfony:7.4-apache-buildcache
+          cache-from: type=registry,ref=ghcr.io/${{ github.repository_owner }}/symfony:7.4-apache-buildcache
+          cache-to: type=registry,mode=max,ref=ghcr.io/${{ github.repository_owner }}/symfony:7.4-apache-buildcache
           push: true
           tags: |
             ${{ github.repository_owner }}/symfony:7.4-apache
