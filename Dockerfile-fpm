@@ -1,13 +1,9 @@
-FROM koalaphils/php:8-apache
+ARG PHP_VERSION=8
+FROM koalaphils/php:${PHP_VERSION}-fpm
 
 #Install symfony cli
 RUN curl -sS https://get.symfony.com/cli/installer | bash
 RUN mv /root/.symfony/bin/symfony /usr/local/bin/symfony
-
-ENV APACHE_DOCUMENT_ROOT /var/www/html/public
-
-#Apache changes for document root
-RUN sed -ri -e "s|/var/www/html|${APACHE_DOCUMENT_ROOT}|g" $APACHE_CONFDIR/sites-available/*.conf
 
 #Copy codes to html folder
 ONBUILD COPY app /var/www/html
