@@ -20,7 +20,7 @@ jobs:
     permissions:
       packages: write
     env:
-      PHP_VERSION: 8
+      version: 8
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -39,47 +39,45 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
-        with:
-          platforms: all
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
-      - name: PHP ${{ env.PHP_VERSION }} FPM
+      - name: PHP ${{ env.version }} FPM
         uses: docker/build-push-action@v2
         with:
           context: ./
           file: ./Dockerfile-fpm
           build-args: |
-            PHP_VERSION=${{ env.PHP_VERSION }}
+            PHP_VERSION=${{ env.version }}
           builder: ${{ steps.buildx.outputs.name }}
           platforms: linux/amd64,linux/arm64/v8
-          cache-from: type=registry,ref=ghcr.io/${{ github.repository_owner }}/cache/symfony:${{ env.PHP_VERSION }}-fpm
-          cache-to: type=registry,mode=max,ref=ghcr.io/${{ github.repository_owner }}/cache/symfony:${{ env.PHP_VERSION }}-fpm
+          cache-from: type=registry,ref=ghcr.io/${{ github.repository_owner }}/cache/symfony:${{ env.version }}-fpm
+          cache-to: type=registry,mode=max,ref=ghcr.io/${{ github.repository_owner }}/cache/symfony:${{ env.version }}-fpm
           push: true
           tags: |
-            ${{ github.repository_owner }}/symfony:${{ env.PHP_VERSION }}-fpm
-            ghcr.io/${{ github.repository_owner }}/symfony:${{ env.PHP_VERSION }}-fpm
-      - name: PHP ${{ env.PHP_VERSION }} Apache
+            ghcr.io/${{ github.repository_owner }}/symfony:${{ env.version }}-fpm
+#            ${{ github.repository_owner }}/symfony:${{ env.version }}-fpm
+      - name: PHP ${{ env.version }} Apache
         uses: docker/build-push-action@v2
         with:
           context: ./
           file: ./Dockerfile-apache
           build-args: |
-            PHP_VERSION=${{ env.PHP_VERSION }}
+            PHP_VERSION=${{ env.version }}
           builder: ${{ steps.buildx.outputs.name }}
           platforms: linux/amd64,linux/arm64/v8
-          cache-from: type=registry,ref=ghcr.io/${{ github.repository_owner }}/cache/symfony:${{ env.PHP_VERSION }}-apache
-          cache-to: type=registry,mode=max,ref=ghcr.io/${{ github.repository_owner }}/cache/symfony:${{ env.PHP_VERSION }}-apache
+          cache-from: type=registry,ref=ghcr.io/${{ github.repository_owner }}/cache/symfony:${{ env.version }}-apache
+          cache-to: type=registry,mode=max,ref=ghcr.io/${{ github.repository_owner }}/cache/symfony:${{ env.version }}-apache
           push: true
           tags: |
-            ${{ github.repository_owner }}/symfony:${{ env.PHP_VERSION }}-apache
-            ghcr.io/${{ github.repository_owner }}/symfony:${{ env.PHP_VERSION }}-apache
+            ghcr.io/${{ github.repository_owner }}/symfony:${{ env.version }}-apache
+#            ${{ github.repository_owner }}/symfony:${{ env.version }}-apache
   php-81:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     permissions:
       packages: write
     env:
-      PHP_VERSION: 8.1
+      version: 8.1
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -98,47 +96,45 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
-        with:
-          platforms: all
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
-      - name: PHP ${{ env.PHP_VERSION }} FPM
+      - name: PHP ${{ env.version }} FPM
         uses: docker/build-push-action@v2
         with:
           context: ./
           file: ./Dockerfile-fpm
           build-args: |
-            PHP_VERSION=${{ env.PHP_VERSION }}
+            PHP_VERSION=${{ env.version }}
           builder: ${{ steps.buildx.outputs.name }}
           platforms: linux/amd64,linux/arm64/v8
-          cache-from: type=registry,ref=ghcr.io/${{ github.repository_owner }}/cache/symfony:${{ env.PHP_VERSION }}-fpm
-          cache-to: type=registry,mode=max,ref=ghcr.io/${{ github.repository_owner }}/cache/symfony:${{ env.PHP_VERSION }}-fpm
+          cache-from: type=registry,ref=ghcr.io/${{ github.repository_owner }}/cache/symfony:${{ env.version }}-fpm
+          cache-to: type=registry,mode=max,ref=ghcr.io/${{ github.repository_owner }}/cache/symfony:${{ env.version }}-fpm
           push: true
           tags: |
-            ${{ github.repository_owner }}/symfony:${{ env.PHP_VERSION }}-fpm
-            ghcr.io/${{ github.repository_owner }}/symfony:${{ env.PHP_VERSION }}-fpm
-      - name: PHP ${{ env.PHP_VERSION }} Apache
+            ghcr.io/${{ github.repository_owner }}/symfony:${{ env.version }}-fpm
+#            ${{ github.repository_owner }}/symfony:${{ env.version }}-fpm
+      - name: PHP ${{ env.version }} Apache
         uses: docker/build-push-action@v2
         with:
           context: ./
           file: ./Dockerfile-apache
           build-args: |
-            PHP_VERSION=${{ env.PHP_VERSION }}
+            PHP_VERSION=${{ env.version }}
           builder: ${{ steps.buildx.outputs.name }}
           platforms: linux/amd64,linux/arm64/v8
-          cache-from: type=registry,ref=ghcr.io/${{ github.repository_owner }}/cache/symfony:${{ env.PHP_VERSION }}-apache
-          cache-to: type=registry,mode=max,ref=ghcr.io/${{ github.repository_owner }}/cache/symfony:${{ env.PHP_VERSION }}-apache
+          cache-from: type=registry,ref=ghcr.io/${{ github.repository_owner }}/cache/symfony:${{ env.version }}-apache
+          cache-to: type=registry,mode=max,ref=ghcr.io/${{ github.repository_owner }}/cache/symfony:${{ env.version }}-apache
           push: true
           tags: |
-            ${{ github.repository_owner }}/symfony:${{ env.PHP_VERSION }}-apache
-            ghcr.io/${{ github.repository_owner }}/symfony:${{ env.PHP_VERSION }}-apache
+            ghcr.io/${{ github.repository_owner }}/symfony:${{ env.version }}-apache
+#            ${{ github.repository_owner }}/symfony:${{ env.version }}-apache
   php-74:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     permissions:
       packages: write
     env:
-      PHP_VERSION: 7.4
+      version: 7.4
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -157,37 +153,35 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
-        with:
-          platforms: all
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
-      - name: PHP ${{ env.PHP_VERSION }} FPM
+      - name: PHP ${{ env.version }} FPM
         uses: docker/build-push-action@v2
         with:
           context: ./
           file: ./Dockerfile-fpm
           build-args: |
-            PHP_VERSION=${{ env.PHP_VERSION }}
+            PHP_VERSION=${{ env.version }}
           builder: ${{ steps.buildx.outputs.name }}
           platforms: linux/amd64,linux/arm64/v8
-          cache-from: type=registry,ref=ghcr.io/${{ github.repository_owner }}/cache/symfony:${{ env.PHP_VERSION }}-fpm
-          cache-to: type=registry,mode=max,ref=ghcr.io/${{ github.repository_owner }}/cache/symfony:${{ env.PHP_VERSION }}-fpm
+          cache-from: type=registry,ref=ghcr.io/${{ github.repository_owner }}/cache/symfony:${{ env.version }}-fpm
+          cache-to: type=registry,mode=max,ref=ghcr.io/${{ github.repository_owner }}/cache/symfony:${{ env.version }}-fpm
           push: true
           tags: |
-            ${{ github.repository_owner }}/symfony:${{ env.PHP_VERSION }}-fpm
-            ghcr.io/${{ github.repository_owner }}/symfony:${{ env.PHP_VERSION }}-fpm
-      - name: PHP ${{ env.PHP_VERSION }} Apache
+            ghcr.io/${{ github.repository_owner }}/symfony:${{ env.version }}-fpm
+#            ${{ github.repository_owner }}/symfony:${{ env.version }}-fpm
+      - name: PHP ${{ env.version }} Apache
         uses: docker/build-push-action@v2
         with:
           context: ./
           file: ./Dockerfile-apache
           build-args: |
-            PHP_VERSION=${{ env.PHP_VERSION }}
+            PHP_VERSION=${{ env.version }}
           builder: ${{ steps.buildx.outputs.name }}
           platforms: linux/amd64,linux/arm64/v8
-          cache-from: type=registry,ref=ghcr.io/${{ github.repository_owner }}/cache/symfony:${{ env.PHP_VERSION }}-apache
-          cache-to: type=registry,mode=max,ref=ghcr.io/${{ github.repository_owner }}/cache/symfony:${{ env.PHP_VERSION }}-apache
+          cache-from: type=registry,ref=ghcr.io/${{ github.repository_owner }}/cache/symfony:${{ env.version }}-apache
+          cache-to: type=registry,mode=max,ref=ghcr.io/${{ github.repository_owner }}/cache/symfony:${{ env.version }}-apache
           push: true
           tags: |
-            ${{ github.repository_owner }}/symfony:${{ env.PHP_VERSION }}-apache
-            ghcr.io/${{ github.repository_owner }}/symfony:${{ env.PHP_VERSION }}-apache
+            ghcr.io/${{ github.repository_owner }}/symfony:${{ env.version }}-apache
+#            ${{ github.repository_owner }}/symfony:${{ env.version }}-apache

@@ -1,5 +1,5 @@
 ARG PHP_VERSION=8
-FROM koalaphils/php:${PHP_VERSION}-apache
+FROM ghcr.io/koalaphils/php:${PHP_VERSION}-apache
 
 #Install symfony cli
 RUN curl -sS https://get.symfony.com/cli/installer | bash
