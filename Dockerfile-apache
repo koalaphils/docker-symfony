@@ -3,7 +3,7 @@ FROM ghcr.io/koalaphils/php:${PHP_VERSION}-apache
 
 #Install symfony cli
 RUN curl -sS https://get.symfony.com/cli/installer | bash
-RUN mv /root/.symfony/bin/symfony /usr/local/bin/symfony
+RUN export PATH="$HOME/.symfony5/bin:$PATH"
 
 ENV APACHE_DOCUMENT_ROOT /var/www/html/public
 

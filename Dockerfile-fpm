@@ -4,7 +4,7 @@ FROM ghcr.io/koalaphils/php:${PHP_VERSION}-fpm${SUFFIX:-}
 
 #Install symfony cli
 RUN curl -sS https://get.symfony.com/cli/installer | bash
-RUN mv /root/.symfony/bin/symfony /usr/local/bin/symfony
+RUN export PATH="$HOME/.symfony5/bin:$PATH"
 
 #Copy codes to html folder
 ONBUILD COPY app /var/www/html
