@@ -4,7 +4,7 @@ FROM ghcr.io/koalaphils/php:${PHP_VERSION}-fpm${SUFFIX:-}
 
 #Install symfony cli
 RUN curl -sS https://get.symfony.com/cli/installer | bash
-RUN export PATH="$HOME/.symfony5/bin:$PATH"
+ENV PATH="$HOME/.symfony5/bin:$PATH"
 
 #Copy codes to html folder
 ONBUILD COPY app /var/www/html
@@ -14,5 +14,6 @@ ONBUILD RUN composer config --global use-github-api false \
   ; rm -rf vendor && mkdir -p vendor \
   ; php -d memory_limit=-1 `which composer` install --no-scripts --no-autoloader || exit 1 \
   ; composer dumpautoload -no --apcu --no-scripts \
+  ; symfony version || exit 1 \
   ;
 ONBUILD VOLUME /var/www/html/vendor
