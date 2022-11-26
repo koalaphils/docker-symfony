@@ -20,11 +20,11 @@ jobs:
       sha: ${{ steps.short-sha.outputs.sha }}
       date: ${{ steps.date.outputs.date }}
     steps:
-      - uses: benjlevesque/short-sha@v1.2
+      - uses: benjlevesque/short-sha@v2.1
         id: short-sha
       - name: Get current date
         id: date
-        run: echo "::set-output name=date::$(date -u +'%Y%m%d')"
+        run: echo "{date}={$(date -u +'%Y%m%d')}" >> $GITHUB_OUTPUT
   php-81:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
@@ -38,18 +38,18 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout Reppo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v1
+        uses: docker/setup-qemu-action@v2
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
+        uses: docker/setup-buildx-action@v2
       - name: Login to Dockerhub
-        uses: docker/login-action@v1
+        uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
       - name: Login to GHCR
-        uses: docker/login-action@v1
+        uses: docker/login-action@v2
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
@@ -132,111 +132,18 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout Reppo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v1
+        uses: docker/setup-qemu-action@v2
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
+        uses: docker/setup-buildx-action@v2
       - name: Login to Dockerhub
-        uses: docker/login-action@v1
+        uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
       - name: Login to GHCR
-        uses: docker/login-action@v1
-        with:
-          registry: ghcr.io
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-      - name: PHP ${{ env.version }} FPM
-        uses: docker/build-push-action@v2
-        with:
-          context: ./
-          file: ./Dockerfile-fpm
-          build-args: |
-            PHP_VERSION=${{ env.version }}
-          builder: ${{ steps.buildx.outputs.name }}
-          platforms: linux/amd64,linux/arm64/v8
-          cache-from: type=registry,ref=ghcr.io/${{ github.repository_owner }}/cache/symfony:${{ env.version }}-fpm
-          cache-to: type=registry,mode=max,ref=ghcr.io/${{ github.repository_owner }}/cache/symfony:${{ env.version }}-fpm
-          push: true
-          tags: |
-            ghcr.io/${{ github.repository_owner }}/symfony:${{ env.version }}-fpm-${{ needs.build-versions.outputs.date }}
-            ${{ github.repository_owner }}/symfony:${{ env.version }}-fpm-${{ needs.build-versions.outputs.date }}
-            ghcr.io/${{ github.repository_owner }}/symfony:${{ env.version }}-fpm-${{ needs.build-versions.outputs.sha }}
-            ${{ github.repository_owner }}/symfony:${{ env.version }}-fpm-${{ needs.build-versions.outputs.sha }}
-            ghcr.io/${{ github.repository_owner }}/symfony:${{ env.version }}-fpm
-            ${{ github.repository_owner }}/symfony:${{ env.version }}-fpm
-            ghcr.io/${{ github.repository_owner }}/symfony:${{ env.alternate_version }}-fpm
-            ${{ github.repository_owner }}/symfony:${{ env.alternate_version }}-fpm
-      - name: PHP ${{ env.version }} FPM Alpine
-        uses: docker/build-push-action@v2
-        with:
-          context: ./
-          file: ./Dockerfile-fpm
-          build-args: |
-            PHP_VERSION=${{ env.version }}
-            SUFFIX=-alpine
-          builder: ${{ steps.buildx.outputs.name }}
-          platforms: linux/amd64,linux/arm64/v8
-          cache-from: type=registry,ref=ghcr.io/${{ github.repository_owner }}/cache/symfony:${{ env.version }}-fpm-alpine
-          cache-to: type=registry,mode=max,ref=ghcr.io/${{ github.repository_owner }}/cache/symfony:${{ env.version }}-fpm-alpine
-          push: true
-          tags: |
-            ghcr.io/${{ github.repository_owner }}/symfony:${{ env.version }}-fpm-alpine-${{ needs.build-versions.outputs.date }}
-            ${{ github.repository_owner }}/symfony:${{ env.version }}-fpm-alpine-${{ needs.build-versions.outputs.date }}
-            ghcr.io/${{ github.repository_owner }}/symfony:${{ env.version }}-fpm-alpine-${{ needs.build-versions.outputs.sha }}
-            ${{ github.repository_owner }}/symfony:${{ env.version }}-fpm-alpine-${{ needs.build-versions.outputs.sha }}
-            ghcr.io/${{ github.repository_owner }}/symfony:${{ env.version }}-fpm-alpine
-            ${{ github.repository_owner }}/symfony:${{ env.version }}-fpm-alpine
-            ghcr.io/${{ github.repository_owner }}/symfony:${{ env.alternate_version }}-fpm-alpine
-            ${{ github.repository_owner }}/symfony:${{ env.alternate_version }}-fpm-alpine
-      - name: PHP ${{ env.version }} Apache
-        uses: docker/build-push-action@v2
-        with:
-          context: ./
-          file: ./Dockerfile-apache
-          build-args: |
-            PHP_VERSION=${{ env.version }}
-          builder: ${{ steps.buildx.outputs.name }}
-          platforms: linux/amd64,linux/arm64/v8
-          cache-from: type=registry,ref=ghcr.io/${{ github.repository_owner }}/cache/symfony:${{ env.version }}-apache
-          cache-to: type=registry,mode=max,ref=ghcr.io/${{ github.repository_owner }}/cache/symfony:${{ env.version }}-apache
-          push: true
-          tags: |
-            ghcr.io/${{ github.repository_owner }}/symfony:${{ env.version }}-apache-${{ needs.build-versions.outputs.date }}
-            ${{ github.repository_owner }}/symfony:${{ env.version }}-apache-${{ needs.build-versions.outputs.date }}
-            ghcr.io/${{ github.repository_owner }}/symfony:${{ env.version }}-apache-${{ needs.build-versions.outputs.sha }}
-            ${{ github.repository_owner }}/symfony:${{ env.version }}-apache-${{ needs.build-versions.outputs.sha }}
-            ghcr.io/${{ github.repository_owner }}/symfony:${{ env.version }}-apache
-            ${{ github.repository_owner }}/symfony:${{ env.version }}-apache
-            ghcr.io/${{ github.repository_owner }}/symfony:${{ env.alternate_version }}-apache
-            ${{ github.repository_owner }}/symfony:${{ env.alternate_version }}-apache
-  php-74:
-    # The type of runner that the job will run on
-    runs-on: ubuntu-latest
-    needs: build-versions
-    permissions:
-      packages: write
-    env:
-      version: '7.4'
-      alternate_version: '7'
-    # Steps represent a sequence of tasks that will be executed as part of the job
-    steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - name: Checkout Reppo
-        uses: actions/checkout@v2
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v1
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
-      - name: Login to Dockerhub
-        uses: docker/login-action@v1
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
-      - name: Login to GHCR
-        uses: docker/login-action@v1
+        uses: docker/login-action@v2
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
