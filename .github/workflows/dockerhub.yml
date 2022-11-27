@@ -55,7 +55,7 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: PHP ${{ env.version }} FPM
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v3
         with:
           context: ./
           file: ./Dockerfile-fpm
@@ -76,7 +76,7 @@ jobs:
             ghcr.io/${{ github.repository_owner }}/symfony:${{ env.alternate_version }}-fpm
             ${{ github.repository_owner }}/symfony:${{ env.alternate_version }}-fpm
       - name: PHP ${{ env.version }} FPM Alpine
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v3
         with:
           context: ./
           file: ./Dockerfile-fpm
@@ -98,7 +98,7 @@ jobs:
             ghcr.io/${{ github.repository_owner }}/symfony:${{ env.alternate_version }}-fpm-alpine
             ${{ github.repository_owner }}/symfony:${{ env.alternate_version }}-fpm-alpine
       - name: PHP ${{ env.version }} Apache
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v3
         with:
           context: ./
           file: ./Dockerfile-apache
@@ -149,7 +149,7 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: PHP ${{ env.version }} FPM
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v3
         with:
           context: ./
           file: ./Dockerfile-fpm
@@ -170,7 +170,7 @@ jobs:
             ghcr.io/${{ github.repository_owner }}/symfony:${{ env.alternate_version }}-fpm
             ${{ github.repository_owner }}/symfony:${{ env.alternate_version }}-fpm
       - name: PHP ${{ env.version }} FPM Alpine
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v3
         with:
           context: ./
           file: ./Dockerfile-fpm
@@ -192,7 +192,7 @@ jobs:
             ghcr.io/${{ github.repository_owner }}/symfony:${{ env.alternate_version }}-fpm-alpine
             ${{ github.repository_owner }}/symfony:${{ env.alternate_version }}-fpm-alpine
       - name: PHP ${{ env.version }} Apache
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v3
         with:
           context: ./
           file: ./Dockerfile-apache
