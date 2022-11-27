@@ -24,7 +24,7 @@ jobs:
         id: short-sha
       - name: Get current date
         id: date
-        run: echo "{date}={$(date -u +'%Y%m%d')}" >> $GITHUB_OUTPUT
+        run: echo "date=$(date -u +'%Y%m%d')" >> $GITHUB_OUTPUT
   php-81:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
