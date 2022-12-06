@@ -2,6 +2,9 @@ ARG PHP_VERSION=8
 ARG SUFFIX
 FROM ghcr.io/koalaphils/php:${PHP_VERSION}-fpm${SUFFIX:-}
 
+COPY --from=composer/composer /usr/bin/composer /usr/local/bin/composer
+RUN composer config --global use-github-api false
+
 #Install symfony cli
 RUN curl -sS https://get.symfony.com/cli/installer | bash
 ENV PATH="/root/.symfony5/bin:$PATH"
