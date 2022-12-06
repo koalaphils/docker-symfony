@@ -2,7 +2,14 @@ ARG PHP_VERSION=8
 FROM ghcr.io/koalaphils/php:${PHP_VERSION}-apache
 
 COPY --from=composer/composer /usr/bin/composer /usr/local/bin/composer
-RUN composer config --global use-github-api false
+RUN composer config --global use-github-api false \
+    ; docker-php-ext-enable \
+      apcu \
+      event \
+      opcache \
+      pcntl \
+      zip \
+    ;
 
 #Install symfony cli
 RUN curl -sS https://get.symfony.com/cli/installer | bash
