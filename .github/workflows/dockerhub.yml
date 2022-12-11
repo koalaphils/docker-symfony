@@ -32,8 +32,8 @@ jobs:
     permissions:
       packages: write
     env:
-      version: '8.2-rc'
-      alternate_version: '8.2-rc'
+      version: '8.2'
+      alternate_version: '8'
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -75,6 +75,10 @@ jobs:
             ${{ github.repository_owner }}/symfony:${{ env.version }}-fpm
             ghcr.io/${{ github.repository_owner }}/symfony:${{ env.alternate_version }}-fpm
             ${{ github.repository_owner }}/symfony:${{ env.alternate_version }}-fpm
+            ghcr.io/${{ github.repository_owner }}/symfony:fpm
+            ${{ github.repository_owner }}/symfony:fpm
+            ghcr.io/${{ github.repository_owner }}/symfony:latest
+            ${{ github.repository_owner }}/symfony:latest
       - name: PHP ${{ env.version }} FPM Alpine
         uses: docker/build-push-action@v3
         with:
@@ -97,6 +101,8 @@ jobs:
             ${{ github.repository_owner }}/symfony:${{ env.version }}-fpm-alpine
             ghcr.io/${{ github.repository_owner }}/symfony:${{ env.alternate_version }}-fpm-alpine
             ${{ github.repository_owner }}/symfony:${{ env.alternate_version }}-fpm-alpine
+            ghcr.io/${{ github.repository_owner }}/symfony:fpm-alpine
+            ${{ github.repository_owner }}/symfony:fpm-alpine
       - name: PHP ${{ env.version }} Apache
         uses: docker/build-push-action@v3
         with:
@@ -118,6 +124,8 @@ jobs:
             ${{ github.repository_owner }}/symfony:${{ env.version }}-apache
             ghcr.io/${{ github.repository_owner }}/symfony:${{ env.alternate_version }}-apache
             ${{ github.repository_owner }}/symfony:${{ env.alternate_version }}-apache
+            ghcr.io/${{ github.repository_owner }}/symfony:apache
+            ${{ github.repository_owner }}/symfony:apache
   php-81:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
@@ -126,7 +134,7 @@ jobs:
       packages: write
     env:
       version: '8.1'
-      alternate_version: '8'
+      alternate_version: '8.1'
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it

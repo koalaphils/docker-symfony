@@ -12,9 +12,8 @@ RUN composer config --global use-github-api false \
     ;
 
 #Install symfony cli
-RUN curl -sS https://get.symfony.com/cli/installer | bash
+RUN curl -sS https://get.symfony.com/cli/installer | bash -s - --install-dir /usr/local/bin
 
-ENV PATH="/root/.symfony5/bin:$PATH"
 ENV APACHE_DOCUMENT_ROOT /var/www/html/public
 
 #Apache changes for document root
@@ -24,8 +23,7 @@ RUN sed -ri -e "s|/var/www/html|${APACHE_DOCUMENT_ROOT}|g" $APACHE_CONFDIR/sites
 ONBUILD COPY app /var/www/html
 
 #Install composer packages
-ONBUILD RUN composer config --global use-github-api false \
-  ; rm -rf vendor && mkdir -p vendor \
+ONBUILD RUN rm -rf vendor && mkdir -p vendor \
   ; php -d memory_limit=-1 `which composer` install --no-scripts --no-autoloader || exit 1 \
   ; composer dumpautoload -no --apcu --no-scripts \
   ; symfony version || exit 1 \
