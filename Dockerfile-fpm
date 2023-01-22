@@ -3,10 +3,12 @@ ARG SUFFIX
 FROM ghcr.io/koalaphils/php:${PHP_VERSION}-fpm${SUFFIX:-}
 
 COPY --from=composer/composer /usr/bin/composer /usr/local/bin/composer
+COPY opt/php/*.ini $PHP_INI_DIR/conf.d/
 RUN composer config --global use-github-api false \
     ; docker-php-ext-enable \
       apcu \
       event \
+      intl \
       opcache \
       pcntl \
       zip \
@@ -22,6 +24,7 @@ ONBUILD COPY app /var/www/html
 ONBUILD RUN rm -rf vendor && mkdir -p vendor \
   ; php -d memory_limit=-1 `which composer` install --no-scripts --no-autoloader || exit 1 \
   ; composer dumpautoload -no --apcu --no-scripts \
+  ; symfony check:requirements || exit 1 \
   ; symfony version || exit 1 \
   ;
 ONBUILD VOLUME /var/www/html/vendor
