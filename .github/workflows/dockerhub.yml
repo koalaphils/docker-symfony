@@ -34,7 +34,7 @@ jobs:
     strategy:
       matrix:
         variant: [fpm, fpm-alpine, apache]
-        version: ['8.2']
+        version: ['8.3']
         latest: ['8']
     uses: ./.github/workflows/build.yml
     secrets: inherit
@@ -63,7 +63,7 @@ jobs:
       max-parallel: 4
       matrix:
         variant: [fpm, fpm-alpine, apache]
-        version: ['8.2', '8.1']
+        version: ['8.3', '8.2', '8.1']
     uses: ./.github/workflows/build.yml
     secrets: inherit
     with:
