@@ -23,7 +23,7 @@ ONBUILD COPY app /var/www/html
 #Install composer packages
 ONBUILD RUN rm -rf vendor && mkdir -p vendor \
   ; php -d memory_limit=-1 `which composer` install --no-scripts --no-autoloader || exit 1 \
-  ; composer dumpautoload -no --apcu --no-scripts \
+  ; composer dumpautoload -no --apcu --no-scripts --classmap-authoritative \
   ; symfony check:requirements || exit 1 \
   ; symfony version || exit 1 \
   ;
