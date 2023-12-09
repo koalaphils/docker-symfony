@@ -106,5 +106,5 @@ jobs:
               }
               //sleep 30 seconds before iterating again, to combat ratelimitting
               await sleep(30000)
-            } while(caches)
+            } while(caches?.data?.actions_caches?.length > 0)
             console.log("Clear completed")
