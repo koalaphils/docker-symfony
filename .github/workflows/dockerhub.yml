@@ -91,7 +91,6 @@ jobs:
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 per_page: 100,
-                sort: created_at,
                 direction: asc
               })
               for (let cache of caches.data.actions_caches) {
