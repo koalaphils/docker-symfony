@@ -87,9 +87,8 @@ jobs:
           script: |
             console.log("About to clear")
             let caches = null
-            let loop = 0;
+            const sleep = ms => new Promise(r => setTimeout(r, ms));
             do {
-              console.log("Iteration: " + loop)
               caches = await github.rest.actions.getActionsCacheList({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
@@ -105,6 +104,7 @@ jobs:
                   cache_id: cache.id,
                 })
               }
-              loop++
-            } while(caches && loop < 2)
+              //sleep 30 seconds before iterating again, to combat ratelimitting
+              await sleep(30000)
+            } while(caches)
             console.log("Clear completed")
