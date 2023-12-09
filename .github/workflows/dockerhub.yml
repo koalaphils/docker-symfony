@@ -15,19 +15,25 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   build-versions:
-    runs-on: ubuntu-latest
-    outputs:
-      sha: ${{ steps.short-sha.outputs.sha }}
-      date: ${{ steps.date.outputs.date }}
-    steps:
-      - uses: actions/checkout@v3
-      - uses: benjlevesque/short-sha@v2.2
-        id: short-sha
-        with:
-          length: 6
-      - name: Get current date
-        id: date
-        run: echo "date=$(date -u +'%Y%m%d')" >> $GITHUB_OUTPUT
+    strategy:
+      max-parallel: 10
+      matrix:
+        version:
+          - '8.1'
+          - '8.2'
+          - '8.3'
+        variant:
+          - apache
+          - cli
+          - cli-alpine
+          - fpm
+          - fpm-alpine
+    uses: ./.github/workflows/build.yml
+    secrets: inherit
+    with:
+      version: ${{ matrix.version }}
+      variant: ${{ matrix.variant }}
+      latest: '8.3'
 
   latest:
     needs: [build-versions, build-images]

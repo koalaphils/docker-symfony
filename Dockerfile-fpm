@@ -1,5 +1,4 @@
 ARG PHP_VERSION=8
-ARG SUFFIX
 FROM ghcr.io/koalaphils/php:${PHP_VERSION}-fpm
 
 COPY --from=composer/composer /usr/bin/composer /usr/local/bin/composer
