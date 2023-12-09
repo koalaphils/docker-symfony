@@ -87,7 +87,7 @@ jobs:
           script: |
             set +e
             console.log("About to clear")
-            for it in {1..10}; do
+            for const it in {1..10}; do
             const caches = await github.rest.actions.getActionsCacheList({
               owner: context.repo.owner,
               repo: context.repo.repo,
