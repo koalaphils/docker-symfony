@@ -85,23 +85,22 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            set +e
             console.log("About to clear")
-            for const it in {1..10}; do
-            const caches = await github.rest.actions.getActionsCacheList({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              per_page: 100,
-              sort: created_at,
-              direction: asc
-            })
-            for (const cache of caches.data.actions_caches) {
-              console.log(cache)
-              github.rest.actions.deleteActionsCacheById({
+            do {
+              let caches = await github.rest.actions.getActionsCacheList({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                cache_id: cache.id,
+                per_page: 100,
+                sort: created_at,
+                direction: asc
               })
-            }
-            done
+              for (let cache of caches.data.actions_caches) {
+                console.log(cache)
+                github.rest.actions.deleteActionsCacheById({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  cache_id: cache.id,
+                })
+              }
+            } while(caches.data.actions_caches.length > 0)
             console.log("Clear completed")
