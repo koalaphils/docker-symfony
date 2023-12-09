@@ -87,9 +87,9 @@ jobs:
           script: |
             console.log("About to clear")
             let caches = null
-            let counter = 0
-            const ratelimit = 250 //ratelimit errored at 305, have some buffer
+            let loop = 0;
             do {
+              console.log("Iteration: " + loop)
               caches = await github.rest.actions.getActionsCacheList({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
@@ -99,14 +99,12 @@ jobs:
               })
               for (let cache of caches.data.actions_caches) {
                 console.log(cache)
-                counter++
-                if(counter < ratelimit){
-                  github.rest.actions.deleteActionsCacheById({
-                    owner: context.repo.owner,
-                    repo: context.repo.repo,
-                    cache_id: cache.id,
-                  })
-                }
+                github.rest.actions.deleteActionsCacheById({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  cache_id: cache.id,
+                })
               }
-            } while(caches && counter < ratelimit)
+              loop++
+            } while(caches && loop < 3)
             console.log("Clear completed")
