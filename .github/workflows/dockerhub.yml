@@ -106,5 +106,5 @@ jobs:
                 })
               }
               loop++
-            } while(caches && loop < 3)
+            } while(caches && loop < 2)
             console.log("Clear completed")
