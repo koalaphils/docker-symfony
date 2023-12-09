@@ -85,11 +85,15 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
+            set +e
             console.log("About to clear")
+            for it in {1..10}; do
             const caches = await github.rest.actions.getActionsCacheList({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              per_page: 1000
+              per_page: 100,
+              sort: created_at,
+              direction: asc
             })
             for (const cache of caches.data.actions_caches) {
               console.log(cache)
@@ -99,4 +103,5 @@ jobs:
                 cache_id: cache.id,
               })
             }
+            done
             console.log("Clear completed")
