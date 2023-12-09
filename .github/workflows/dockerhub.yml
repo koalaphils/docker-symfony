@@ -91,7 +91,8 @@ jobs:
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 per_page: 100,
-                direction: asc
+                sort: 'created_at',
+                direction: 'asc'
               })
               for (let cache of caches.data.actions_caches) {
                 console.log(cache)
