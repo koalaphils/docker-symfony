@@ -102,5 +102,5 @@ jobs:
                   cache_id: cache.id,
                 })
               }
-            } while(caches.data.actions_caches.length > 0)
+            } while(caches)
             console.log("Clear completed")
