@@ -86,8 +86,9 @@ jobs:
         with:
           script: |
             console.log("About to clear")
+            let caches = null
             do {
-              let caches = await github.rest.actions.getActionsCacheList({
+              caches = await github.rest.actions.getActionsCacheList({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 per_page: 100,
