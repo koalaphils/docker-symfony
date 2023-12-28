@@ -1,7 +1,7 @@
 ARG PHP_VERSION=8
 FROM ghcr.io/koalaphils/php:${PHP_VERSION}-fpm
 
-COPY --from=composer/composer /usr/bin/composer /usr/local/bin/composer
+COPY --link --from=composer/composer /usr/bin/composer /usr/local/bin/composer
 COPY opt/php/*.ini $PHP_INI_DIR/conf.d/
 RUN composer config --global use-github-api false \
     ; docker-php-ext-enable \
