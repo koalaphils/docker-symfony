@@ -29,7 +29,6 @@ jobs:
         with:
           images: |
             ghcr.io/${{ github.repository_owner }}/symfony
-            public.ecr.aws/${{ github.repository_owner }}/symfony
             ${{ github.repository_owner }}/symfony
           tags: |
             type=raw,value=,prefix=${{ inputs.version }}-${{ inputs.variant }}
