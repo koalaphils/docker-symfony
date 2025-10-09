@@ -19,10 +19,13 @@ jobs:
     timeout-minutes: 180
     permissions:
       packages: write
+      actions: write
+      contents: read
+      pull-requests: write
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout Repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Docker meta
         id: meta
         uses: docker/metadata-action@v5
@@ -58,7 +61,7 @@ jobs:
           username: ${{ secrets.AWS_ACCESS_KEY_ID }}
           password: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       - name: Build PHP ${{ inputs.version }} ${{ inputs.variant }}
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./
           file: ./Dockerfile-${{ inputs.variant }}

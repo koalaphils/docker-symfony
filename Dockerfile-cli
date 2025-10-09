@@ -2,14 +2,19 @@ ARG PHP_VERSION=8
 FROM ghcr.io/koalaphils/php:${PHP_VERSION}-cli
 
 COPY --link --from=composer/composer /usr/bin/composer /usr/local/bin/composer
+
 COPY opt/php/*.ini $PHP_INI_DIR/conf.d/
-RUN composer config --global use-github-api false \
+RUN set -eux; \
+    apt-get update && apt-get install -y --no-install-recommends git &&  \
+    composer config --global use-github-api false \
+    ; git config --global --add safe.directory /var/www/html \
     ; docker-php-ext-enable \
       apcu \
-      event \
+      ev \
+      gd \
       intl \
-      opcache \
       pcntl \
+      xsl \
       zip \
     ;
 
@@ -21,8 +26,9 @@ ONBUILD COPY app /var/www/html
 
 #Install composer packages
 ONBUILD RUN rm -rf vendor && mkdir -p vendor \
-  ; php -d memory_limit=-1 `which composer` install --no-scripts --no-autoloader || exit 1 \
-  ; composer dumpautoload -no --apcu --no-scripts --classmap-authoritative \
+  ; symfony composer install --no-scripts --no-autoloader || exit 1 \
+  ; symfony composer dumpautoload -no --apcu --no-scripts --classmap-authoritative \
+  ; symfony composer run-script post-install-cmd \
   ; symfony check:requirements || exit 1 \
   ; symfony version || exit 1 \
   ;

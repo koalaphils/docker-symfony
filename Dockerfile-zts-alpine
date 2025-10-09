@@ -1,12 +1,11 @@
 ARG PHP_VERSION=8
-FROM ghcr.io/koalaphils/php:${PHP_VERSION}-apache
+FROM ghcr.io/koalaphils/php:${PHP_VERSION}-zts-alpine
 
 COPY --link --from=composer/composer /usr/bin/composer /usr/local/bin/composer
-ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
 
 COPY opt/php/*.ini $PHP_INI_DIR/conf.d/
 RUN set -eux; \
-    apt-get update && apt-get install -y --no-install-recommends git &&  \
+    apk update && apk add --no-cache bash git && \
     composer config --global use-github-api false \
     ; git config --global --add safe.directory /var/www/html \
     ; docker-php-ext-enable \
@@ -21,9 +20,6 @@ RUN set -eux; \
 
 #Install symfony cli
 RUN curl -sS https://get.symfony.com/cli/installer | bash -s - --install-dir /usr/local/bin
-
-#Apache changes for document root
-RUN sed -ri -e "s|/var/www/html|${APACHE_DOCUMENT_ROOT}|g" $APACHE_CONFDIR/sites-available/*.conf
 
 #Copy codes to html folder
 ONBUILD COPY app /var/www/html
