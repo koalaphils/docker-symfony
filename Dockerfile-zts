@@ -9,6 +9,7 @@ RUN set -eux; \
     composer config --global use-github-api false \
     ; git config --global --add safe.directory /var/www/html \
     ; docker-php-ext-enable \
+      apcu \
       ev \
       gd \
       intl \
