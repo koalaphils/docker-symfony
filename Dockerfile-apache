@@ -7,7 +7,7 @@ ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
 COPY opt/php/*.ini $PHP_INI_DIR/conf.d/
 RUN set -eux; \
     apt-get update && apt-get install -y --no-install-recommends git &&  \
-    composer config --global use-github-api false \
+    php -n `which composer` config --global use-github-api false \
     ; git config --global --add safe.directory /var/www/html \
     ; docker-php-ext-enable \
       apcu \

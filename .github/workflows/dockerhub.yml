@@ -26,10 +26,10 @@ jobs:
         variant:
           - cli-alpine
           - fpm-alpine
-#          - zts-alpine
+          - zts-alpine
           - cli
           - fpm
-#          - zts
+          - zts
           - apache
     uses: ./.github/workflows/build.yml
     secrets: inherit
