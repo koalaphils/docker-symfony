@@ -105,8 +105,8 @@ jobs:
         uses: actions/github-script@v8
         with:
           script: |
-            const variant = "${{ matrix.variant }}";
-            const version = "${{ matrix.version }}";
+            const variant = "${{ inputs.variant }}";
+            const version = "${{ inputs.version }}";
             const owner = context.repo.owner;
             const repo = context.repo.repo;
             
