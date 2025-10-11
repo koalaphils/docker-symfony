@@ -186,8 +186,8 @@ jobs:
                 const ageMs = createdAt ? (now - createdAt) : null;
                 const ageDays = ageMs ? (ageMs / (1000*60*60*24)) : null;
             
-                const isSameFull = scopeHash && cacheKey.endsWith(`${scopeHash}`);
-                const isSameShort = shortScopeHash && cacheKey.endsWith(`-${shortScopeHash}`);
+                const isSameFull = scopeHash && cacheKey.includes(`-${scopeHash}-`);
+                const isSameShort = shortScopeHash && cacheKey.includes(`-${shortScopeHash}-`);
                 const isSameHash = isSameFull || isSameShort;
             
                 // Rule:
